@@ -28,7 +28,8 @@
  * This file is part of the lwIP TCP/IP stack.
  * 
  * Author: Adam Dunkels <adam@sics.se>
- *
+ * Modifications: David Nadlinger <david@klickverbot.at> (support for setting
+ *   MAC addr)
  */
 
 #include <fcntl.h>
@@ -83,20 +84,17 @@ static void  mintapif_input(struct netif *netif);
 
 /*-----------------------------------------------------------------------------------*/
 static void
-low_level_init(struct netif *netif)
+low_level_init(struct netif *netif, struct eth_addr *ethaddr)
 {
   struct mintapif *mintapif;
   char buf[1024];
 
   mintapif = netif->state;
   
-  /* Obtain MAC address from network interface. */
-  mintapif->ethaddr->addr[0] = 1;
-  mintapif->ethaddr->addr[1] = 2;
-  mintapif->ethaddr->addr[2] = 3;
-  mintapif->ethaddr->addr[3] = 4;
-  mintapif->ethaddr->addr[4] = 5;
-  mintapif->ethaddr->addr[5] = 6;
+  /* Copy over address from user-specified parameter, we obviously don't have a
+   * real hardware address.
+   */
+  memcpy(mintapif->ethaddr, ethaddr, sizeof(struct eth_addr));
 
   /* Do whatever else is needed to initialize interface. */  
   
@@ -267,6 +265,8 @@ mintapif_input(struct netif *netif)
 err_t
 mintapif_init(struct netif *netif)
 {
+  struct eth_addr *ethaddr = (struct eth_addr *)netif->state;
+
   struct mintapif *mintapif;
     
   mintapif = mem_malloc(sizeof(struct mintapif));
@@ -301,8 +301,7 @@ mintapif_init(struct netif *netif)
   netif->mtu = 1500;
   
   mintapif->ethaddr = (struct eth_addr *)&(netif->hwaddr[0]);
-  
-  low_level_init(netif);
+  low_level_init(netif, ethaddr);
 
   return ERR_OK;
 }
