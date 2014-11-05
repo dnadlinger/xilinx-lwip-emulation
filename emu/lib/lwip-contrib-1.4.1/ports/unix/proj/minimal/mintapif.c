@@ -29,7 +29,8 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  * Modifications: David Nadlinger <david@klickverbot.at> (support for setting
- *   MAC addr)
+ *   MAC addr, enable ARP/IGMP/broadcasts by default so that the interface is
+ *   actually useful)
  */
 
 #include <fcntl.h>
@@ -299,6 +300,7 @@ mintapif_init(struct netif *netif)
   netif->output = etharp_output;
   netif->linkoutput = low_level_output;
   netif->mtu = 1500;
+  netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_IGMP;
   
   mintapif->ethaddr = (struct eth_addr *)&(netif->hwaddr[0]);
   low_level_init(netif, ethaddr);
