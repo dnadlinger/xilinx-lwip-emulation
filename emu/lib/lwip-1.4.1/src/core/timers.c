@@ -410,6 +410,16 @@ sys_restart_timeouts(void)
   timeouts_last_time = sys_now();
 }
 
+/** Return the time left before the next timeout is due. If no timeouts are
+ * enqueued, returns 0xffffffff */
+u32_t
+sys_timeouts_sleeptime(void)
+{
+  if (next_timeout == NULL)
+    return 0xffffffff;
+  return (sys_now() - timeouts_last_time) + next_timeout->time;
+}
+
 #else /* NO_SYS */
 
 /**
