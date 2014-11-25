@@ -5,7 +5,7 @@
 #include "lwip/tcp.h"
 #include "netif/xadapter.h"
 
-// This would be defined in soem Xilinx-supplied headers (or your stubbed-out
+// This would be defined in some Xilinx-supplied headers (resp. your stubbed-out
 // version) in a real application, here it doesn't matter.
 #define XPAR_XEMACPS_0_BASEADDR 0x0
 
