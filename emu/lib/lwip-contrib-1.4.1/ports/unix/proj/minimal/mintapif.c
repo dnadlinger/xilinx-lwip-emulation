@@ -101,7 +101,7 @@ low_level_init(struct netif *netif, struct eth_addr *ethaddr)
   
   mintapif->fd = open(DEVTAP, O_RDWR);
   if (mintapif->fd == -1) {
-    perror("tapif: tapif_init: open");
+    perror("mintapif: mintapif_init: open");
     exit(1);
   }
 
@@ -111,7 +111,7 @@ low_level_init(struct netif *netif, struct eth_addr *ethaddr)
     memset(&ifr, 0, sizeof(ifr));
     ifr.ifr_flags = IFF_TAP|IFF_NO_PI;
     if (ioctl(mintapif->fd, TUNSETIFF, (void *) &ifr) < 0) {
-      perror(buf);
+      perror("mintapif: mintapif_init: ioctl");
       exit(1);
     }
   }
